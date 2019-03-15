@@ -16,7 +16,7 @@ let danmuPool = [
 
 
 
-2.在setTemplates里设置好你的模版，比如弹幕这行要包哪些div，设置哪些a链接。
+###### 2.在setTemplates里设置好你的模版，比如弹幕这行要包哪些div，设置哪些a链接。
 ```javascript
 /**
  * 设置可渲染的模版
