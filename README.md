@@ -26,3 +26,5 @@ function setTemplates(danmuObj){
 return "<a href='"+danmuObj.jobUrl+"'><span style='color:red;'>"+danmuObj.corpName+"</span>的<span style='color:blue;'>"+danmuObj.jobName+"</span>收到一份简历</a>";
 }
 ```
+
+:cow::beer:
