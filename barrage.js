@@ -8,7 +8,7 @@
             allow_repeat: 1, // 允许重复
             danmuPool: [],
             danmuTpl: function(danmuPool) {
-                return;
+                return danmuPool;
             }
         }
         let options = $.extend({}, defaultOpt, opt);
