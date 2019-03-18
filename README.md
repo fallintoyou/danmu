@@ -28,7 +28,7 @@
 ###### 2.弹幕非自定义
 ```javascript
   $('#wrapper').barrage({
-      danmuPopl:['第一条弹幕','第二条弹幕'],
+      danmuPool:['第一条弹幕','第二条弹幕'],
       danmuTpl: function(danmuPool){
         return danmuPool;
       }
