@@ -29,7 +29,7 @@
     }
     //初始化
     let init = function($this, options) {
-        let wrapper = document.getElementById('wrapper');
+        let wrapper = $this[0];
         for (let j = 0; j < options.channel_count; j++) { //行 多少个一位数组
             let doms = [];
             for (let i = 0; i < options.max_dm_count; i++) { //列 多少个二位数组
