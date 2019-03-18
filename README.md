@@ -2,7 +2,7 @@
 #### 一.原生JS实现弹幕效果，这是第二版，封装成插件,支持循环弹幕和自定义弹幕templates。😳
 
 #### 二.用法:
-###### 1.定义好你的弹幕池 
+###### 1.弹幕自定义
 ```javascript
   $('#wrapper').barrage({
       danmuPool:
@@ -24,5 +24,14 @@
         return "<a href='" + danmuPool.jobUrl + "'><span style='color:red;'>" + danmuPool.corpName + "</span>的<span style='color:blue;'>" + danmuPool.jobName + "</span>收到一份简历</a>";
       }
   });
+```
+###### 2.弹幕非自定义
+```javascript
+  $('#wrapper').barrage({
+      danmuPopl:['第一条弹幕','第二条弹幕'],
+      danmuTpl: function(danmuPool){
+        return danmuPool;
+      }
+  })
 ```
 :cow::beer:
