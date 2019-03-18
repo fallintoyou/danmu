@@ -5,6 +5,9 @@
 ###### 1.弹幕自定义
 ```javascript
   $('#wrapper').barrage({
+      max_dm_count: 1, // 最大限制
+      channel_count: 2, // 通道
+      allow_repeat: 1, // 允许重复
       danmuPool:
             [{
                 "corpName": "泰禾光电",
