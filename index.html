@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8" />
-  <title>原生JS实现弹幕效果</title>
-  <style>
-    #wrapper {
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            原生JS实现弹幕效果
+        </title>
+        <style>
+            #wrapper {
       height: 400px;
       width: 700px;
       position: relative;
@@ -45,345 +47,44 @@
       border-radius: 10px;
       font-size: 16px;
     }
-  </style>
-</head>
-<body>
-<div id="wrapper">
-  <input type="text">
-  <button>发&nbsp;&nbsp;送</button>
-</div>
-<script>
-/**
- * 设置 弹幕DOM池 每一个通道最多六条弹幕
-**/
+        </style>
+        <script src="http://code.jquery.com/jquery-latest.js" typet="text/javascript">
+        </script>
+        <script src="./barrage.js" type="text/javascript">
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <!--   <input type="text">
+  <button>发&nbsp;&nbsp;送</button> -->
+        </div>
+    </body>
+</html>
+<script type="text/javascript">
+    $(function(){
 
-const MAX_DM_COUNT = 6;
-const CHANNEL_COUNT = 2;
-const ALLOW_REPEAT = 0;
 
-let domPool = [];
-let danmuPool = [
-    {
+  $('#wrapper').barrage({
+      danmuPool:
+            [{
                 "corpName": "泰禾光电",
                 "width": "w300",
                 "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=10192",
                 "jobName": "深度学习算法工程师",
                 "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1358505"
-            },
+            }, 
             {
                 "corpName": "苏宁易购",
                 "width": "w450",
                 "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=57587",
                 "jobName": "B2B渠道客户经理",
                 "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1482519"
-            },
-            {
-                "corpName": "特步",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=48873",
-                "jobName": "区域经理",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1335699"
-            },
-            {
-                "corpName": "洽洽",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=56",
-                "jobName": "产品经理",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1453104"
-            },
-            {
-                "corpName": "徽酒集团",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=57318",
-                "jobName": "媒介主管",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1384097"
-            },
-            {
-                "corpName": "银泰",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=12160",
-                "jobName": "2019届管培生",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1427726"
-            },
-            {
-                "corpName": "百川名品",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=10191",
-                "jobName": "审计经理",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1447802"
-            },
-            {
-                "corpName": "艺朝艺夕教育科技集团",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=45863",
-                "jobName": "高端少儿英语教师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=955028"
-            },
-            {
-                "corpName": "中国声谷",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=32426",
-                "jobName": "自然语言算法工程师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1417277"
-            },
-            {
-                "corpName": "游昕网络",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=56667",
-                "jobName": "游戏测试员",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1323732"
-            },
-            {
-                "corpName": "网新科技",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=62",
-                "jobName": "SEM优化运营（百度核心岗）",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1169900"
-            },
-            {
-                "corpName": "联发科技（合肥）有限公司",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=4249",
-                "jobName": "高级软件工程师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1468436"
-            },
-            {
-                "corpName": "合肥赛为智能有限公司",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=28915",
-                "jobName": "APP开发工程师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1364804"
-            },
-            {
-                "corpName": "好车到家",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=47928",
-                "jobName": "Java开发工程师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1437272"
-            },
-            {
-                "corpName": "中梁控股集团",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=47391",
-                "jobName": "建筑设计师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1202823"
-            },
-            {
-                "corpName": "阳光城安徽区域公司",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=60079",
-                "jobName": "土建工程师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1415758"
-            },
-            {
-                "corpName": "芜湖新华联文化旅游投资管理有限公司",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=26250",
-                "jobName": "园林景观设计师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1249442"
-            },
-            {
-                "corpName": "首创钜大合肥公司",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=43959",
-                "jobName": "招商运营专业经理",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1456171"
-            },
-            {
-                "corpName": "绿地集团",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=14811",
-                "jobName": "安装工程师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1330987"
-            },
-            {
-                "corpName": "金科地产合肥公司",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=15252",
-                "jobName": "策划专员",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1448554"
-            },
-            {
-                "corpName": "万科",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=13710",
-                "jobName": "人力资源主管",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1089401"
-            },
-            {
-                "corpName": "融创",
-                "width": "w300",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=39802",
-                "jobName": "运营管理主管 ",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1465881"
-            },
-            {
-                "corpName": "安徽省路网交通建设集团股份有限公司",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=9893",
-                "jobName": "项目财务经理",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1483222"
-            },
-            {
-                "corpName": "安徽加侨投资集团",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=27142",
-                "jobName": "物业工程主管",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1460785"
-            },
-            {
-                "corpName": "老乡鸡",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=12859",
-                "jobName": "自媒体运营",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1482832"
-            },
-            {
-                "corpName": "方特",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=10615",
-                "jobName": "平面设计师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=789811"
-            },
-            {
-                "corpName": "古井酒店",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=20048",
-                "jobName": "酒店大客户经理",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1362284"
-            },
-            {
-                "corpName": "百胜中国",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=25568",
-                "jobName": "见习经理",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=361617"
-            },
-            {
-                "corpName": "安徽青园集团",
-                "width": "w450",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=11626",
-                "jobName": "园林绿化师",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1384779"
-            },
-            {
-                "corpName": "鼎众金融",
-                "width": "w350",
-                "corpUrl": "https://m.goodjobs.cn/corp.php?corpID=50047",
-                "jobName": "实习生",
-                "jobUrl": "https://m.goodjobs.cn/job.php?jobID=1371625"
-            }
-    ];
-let hasPosition = [];
-
-/**
- * 做一下初始化工作
- */
-function init() {
-  let wrapper = document.getElementById('wrapper')
-  // 先new一些span 重复利用这些DOM
-  for (let j = 0; j < CHANNEL_COUNT; j++) {
-    let doms = [];
-    for (let i = 0; i < MAX_DM_COUNT; i++) {
-      // 要全部放进wrapper
-      let dom = document.createElement('span');
-      wrapper.appendChild(dom);
-      // 初始化dom的位置 通过设置className
-      dom.className = 'right';
-      dom.style.border ='1px solid #000';
-      // DOM的通道是固定的 所以设置好top就不需要再改变了
-      dom.style.top = j * 20 + 'px';
-      // 放入改通道的DOM池
-      doms.push(dom);
-      // 每次到transition结束的时候 就是弹幕划出屏幕了 将DOM位置重置 再放回DOM池
-      dom.addEventListener('transitionend', () => {
-        dom.className = 'right';
-        // dom.style.transition = null;
-        // dom.style.left = null;
-        dom.style.transform = null;
-
-        domPool[j].push(dom);
-      });
-    }
-    domPool.push(doms);
-  }
-  // hasPosition 标记每个通道目前是否有位置
-  for (let i = 0; i < CHANNEL_COUNT; i++) {
-    hasPosition[i] = true;
-  }
-}
-
-/**
- * 获取一个可以发射弹幕的通道 没有则返回-1
- */
-function getChannel() {
-  for (let i = 0; i < CHANNEL_COUNT; i++) {
-    if (hasPosition[i] && domPool[i].length) return i;
-  }
-  return -1;
-}
-
-/**
- * 设置可渲染的模版
- * @param {[type]} danmuObj [description]
- */
-function setTemplates(danmuObj){
-return "<a href='"+danmuObj.jobUrl+"'><span style='color:red;'>"+danmuObj.corpName+"</span>的<span style='color:blue;'>"+danmuObj.jobName+"</span>收到一份简历</a>";
-}
+            }],
+      danmuTpl: function(danmuPool){
+        return "<a href='" + danmuPool.jobUrl + "'><span style='color:red;'>" + danmuPool.corpName + "</span>的<span style='color:blue;'>" + danmuPool.jobName + "</span>收到一份简历</a>";
+      }
+  });
 
 
-/**
- * 根据DOM和弹幕信息 发射弹幕
- */
-function shootDanmu(dom, danmuObj, channel) {
-  // console.log('biu~ [' + text + ']');
-  // dom.innerText = text; 这个比较坑，不能自定义dom 所以我换成了innderHTML
-     dom.innerHTML = setTemplates(danmuObj);
-  // 如果为每个弹幕设置 transition 可以保证每个弹幕的速度相同 这里没有保证速度相同
-  // dom.style.transition = `transform ${7 + dom.clientWidth / 100}s linear`;
-
-  // dom.style.left = '-' + dom.clientWidth + 'px';
-  // 设置弹幕的位置信息 性能优化 left -> transform
-  dom.style.transform = `translateX(${-dom.clientWidth}px)`;
-  dom.className = 'left';
-  
-  hasPosition[channel] = false;
-  // 弹幕全部显示之后 才能开始下一条弹幕
-  // 大概 dom.clientWidth * 10 的时间 该条弹幕就从右边全部划出到可见区域 再加1秒保证弹幕之间距离
-  setTimeout(() => {
-    hasPosition[channel] = true;
-  }, dom.clientWidth * 10 + 1000);
-}
-
-window.onload = function() {
-
-  init();
-
-  // 为input和button添加事件监听
-  // let btn = document.getElementsByTagName('button')[0];
-  // let input = document.getElementsByTagName('input')[0];
-  // btn.addEventListener('click', () => {
-  //   input.value = input.value.trim();
-  //   if (input.value) danmuPool.push(input.value);
-  // })
-  // input.addEventListener('keyup', (e) => {
-  //   if (e.key === 'Enter' && (input.value = input.value.trim())) {
-  //     danmuPool.push(input.value);
-  //   }
-  // })
-  // 每隔1ms从弹幕池里获取弹幕（如果有的话）并发射
-  setInterval(() => {
-    let channel;
-    if (danmuPool.length && (channel = getChannel()) != -1) {
-      let dom = domPool[channel].shift();
-      let danmuObj = danmuPool.shift();
-      shootDanmu(dom, danmuObj, channel);
-      danmuPool.push(danmuObj);
-    }
-  }, 1);
-
-}
- 
+ })
 </script>
-</body>
-</html>
