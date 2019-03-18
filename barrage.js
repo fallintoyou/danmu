@@ -1,3 +1,7 @@
+/**
+ * author zhangyanfei 
+ * create_date 2019/03/18
+ */
 ;~ function($) {
     let domPool = [];
     let hasPosition = [];
