@@ -5,8 +5,8 @@
 ###### 1.弹幕自定义
 ```javascript
   $('#wrapper').barrage({
-      max_dm_count: 1, // 最大限制
-      channel_count: 2, // 通道
+      max_dm_count: 1, // 最大数量限制(列)
+      channel_count: 2, // 通道(行)
       allow_repeat: 1, // 允许重复
       danmuPool:
             [{
