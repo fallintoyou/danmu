@@ -17,7 +17,7 @@
         }
         let options = $.extend({}, defaultOpt, opt);
         return this.each(function() {
-            init($(this), options);
+            init(this, options);
             setInterval(() => {
                 let channel;
                 if (options.danmuPool.length && (channel = getChannel(options)) != -1) {
@@ -32,8 +32,8 @@
         })
     }
     //初始化
-    let init = function($this, options) {
-        let wrapper = $this[0];
+    let init = function(_this, options) {
+        let wrapper = _this;
         for (let j = 0; j < options.channel_count; j++) { //行 多少个一位数组
             let doms = [];
             for (let i = 0; i < options.max_dm_count; i++) { //列 多少个二位数组
